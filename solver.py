@@ -1,5 +1,4 @@
-import __builtin__
-np = __builtin__.np if hasattr(__builtin__, 'np') else __import__('numpy')
+import numpy as np
 
 def llf(D, sys, ql, qr, fl, fr, dx, dt):
     lam = D*dt/dx

@@ -1,5 +1,4 @@
-import __builtin__
-np = __import__(__builtin__.np) if hasattr(__builtin__, 'np') else __import__('numpy')
+import numpy as np
 
 class IdealGas:
     def __init__(self, gamma):
