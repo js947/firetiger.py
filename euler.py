@@ -5,7 +5,7 @@ class Euler:
         self.eos = eos
 
     def cons(self, rho, p, *us):
-        E = self.eos.energy(1/rho, p) + np.sqrt(sum(u**2 for u in us))
+        E = self.eos.energy(1/rho, p) + sum(u**2 for u in us)/2
         return np.stack([rho, rho*E] + [rho*u for u in us])
 
     def  density(self, q): return q[0]
@@ -15,7 +15,7 @@ class Euler:
     def volume(self, q):
         return 1 / self.density(q)
     def inenergy(self, q):
-        return self.energy(q) - np.sqrt(np.sum(self.velocity(q)*self.velocity(q), axis=0))
+        return self.energy(q) - np.sum(self.velocity(q)*self.velocity(q), axis=0)/2
 
     def pressure(self, q):
         return self.eos.pressure(self.volume(q), self.inenergy(q))
