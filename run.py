@@ -18,7 +18,7 @@ f = h5py.File(args.file, 'r+')
 sys = np.loads(f.attrs['system'])
 
 i_all, t_all, q_all = (f[n] for n in "itq")
-h = np.array([f[dim].attrs['h'] for dim in "xy"])
+h = f['h']
 
 i, t, q = (x[-1] for x in (i_all, t_all, q_all))
 
