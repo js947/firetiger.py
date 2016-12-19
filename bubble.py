@@ -32,9 +32,9 @@ q = np.where(is_bubble, bubble[:,None,None], np.where(is_shock, shock[:,None,Non
 
 f = h5py.File('bubble.h5', 'w')
 f.attrs['system'] = np.string_(pickle.dumps(sys))
-f.attrs['dimension'] = 2
-x_ = f.create_dataset('x', data=x); x_.attrs['h'] = dx
-y_ = f.create_dataset('y', data=y); y_.attrs['h'] = dy
+h_ = f.create_dataset('h', data=[dx, dy])
+x_ = f.create_dataset('x', data=x)
+y_ = f.create_dataset('y', data=y)
 
 i_ = f.create_dataset('i', (1,), maxshape=(None,), dtype='i')
 t_ = f.create_dataset('t', (1,), maxshape=(None,), dtype='f')
