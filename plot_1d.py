@@ -16,13 +16,20 @@ args = parser.parse_args()
 
 f = h5py.File(args.file, 'r')
 sys = np.loads(f.attrs['system'])
+D = len(f['h'])
 
-x = f['x']
+x = [f[n] for (n,i) in zip("xyz",range(0,D))]
 q = getattr(sys, args.variable)(f['q'][args.i])
 
-plt.plot(x, q, '.-')
-plt.title("%s @ %d:%f" % (args.file, f['i'][args.i], f['t'][args.i]))
-plt.ylabel("%s" % args.variable)
+if D == 1:
+    plt.plot(x[0], q, '.-')
+    plt.title("%s @ %d:%f" % (args.file, f['i'][args.i], f['t'][args.i]))
+    plt.ylabel("%s" % args.variable)
+elif D == 2:
+    plt.axis('equal')
+    plt.contourf(x[0], x[1], q, 15)
+    plt.colorbar()
+    plt.title("%s %s @ %d:%f" % (args.file, args.variable, f['i'][args.i], f['t'][args.i]))
 
 if args.o:
     plt.savefig(args.o)
