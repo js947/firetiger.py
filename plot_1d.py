@@ -20,8 +20,9 @@ sys = np.loads(f.attrs['system'])
 x = f['x']
 q = getattr(sys, args.variable)(f['q'][args.i])
 
-plt.plot(x, q)
-plt.title("%s %s @ %d:%f" % (args.file, args.variable, f['i'][args.i], f['t'][args.i]))
+plt.plot(x, q, '.-')
+plt.title("%s @ %d:%f" % (args.file, f['i'][args.i], f['t'][args.i]))
+plt.ylabel("%s" % args.variable)
 
 if args.o:
     plt.savefig(args.o)
