@@ -9,8 +9,7 @@ from euler import Euler
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("file", help="file to read", type=str)
-parser.add_argument("variable", help="variable to plot", default="pressure", type=str)
-parser.add_argument("-i", help="step number to plot", default=-1, type=int)
+parser.add_argument("variable", help="variable to plot", type=str)
 parser.add_argument("-o", help="output file")
 args = parser.parse_args()
 
@@ -19,17 +18,13 @@ sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
 x = [f[n] for (n,i) in zip("xyz",range(0,D))]
-q = getattr(sys, args.variable)(f['q'][args.i])
+q = np.stack(getattr(sys, args.variable)(q) for q in f['q'])
 
-if D == 1:
-    plt.plot(x[0], q, '.-')
-    plt.title("%s @ %d:%f" % (args.file, f['i'][args.i], f['t'][args.i]))
-    plt.ylabel("%s" % args.variable)
-elif D == 2:
-    plt.axis('equal')
-    plt.contourf(x[0], x[1], q, 15)
-    plt.colorbar()
-    plt.title("%s %s @ %d:%f" % (args.file, args.variable, f['i'][args.i], f['t'][args.i]))
+plt.contourf(x[0], f['t'], q, 15)
+
+plt.title("%s %s" % (args.file, args.variable))
+plt.xlabel('x')
+plt.ylabel('t')
 
 if args.o:
     plt.savefig(args.o)
