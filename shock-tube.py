@@ -9,7 +9,7 @@ from euler import Euler
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("-x", help="x resolution", default=200, type=int)
 parser.add_argument("-c", help="test case", default=1, type=int)
-parser.add_argument("-o", help="simulation file", default="toro.h5", type=str)
+parser.add_argument("-o", help="simulation file", default="shock-tube.h5", type=str)
 args = parser.parse_args()
 
 sys = Euler(IdealGas(1.4))
