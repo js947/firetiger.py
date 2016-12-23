@@ -54,4 +54,3 @@ for tn in target_times:
 
         if args.oi and i%args.oi:
             output(q, i, t)
-
