@@ -32,11 +32,11 @@ class Multiphase(ModifiedConservationLaw):
     def pressure(self, q):
         v = self.volume(q)
         e = self.inenergy(q)
-        return np.stack(eos.pressure(v[i], e[i]) for i, eos in enumerate(eos))
+        return np.stack(eos.pressure(v[i], e[i]) for i, eos in enumerate(self.eos))
     def soundspd(self, q):
         v = self.volume(q)
         p = self.pressure(q)
-        return np.stack(eos.soundspd(v[i], p[i]) for i, eos in enumerate(eos))
+        return np.stack(eos.soundspd(v[i], p[i]) for i, eos in enumerate(self.eos))
 
     def mdensity(self, q):
         return np.sum(self.alpha(q)*self.density(q), axis=0)
