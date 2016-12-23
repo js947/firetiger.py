@@ -32,11 +32,12 @@ class Euler(ConservationLaw):
         return abs(self.velocity(q)) + self.soundspd(q)
     def F(self, q):
         v = self.velocity(q)
-        D = v.shape[0]
+        D, *x = v.shape
+        m = (slice(None),)*2 + (None,)*D
 
         return v[:,None]*q + self.pressure(q)*np.concatenate((
-            np.broadcast_to(np.zeros(D)[(slice(None),None) + (None,)*D], (D,1)+v.shape[1:]),
-            np.broadcast_to(v[:,None],                                   (D,1)+v.shape[1:]),
-            np.broadcast_to(np.eye(D)[(slice(None),)*2 + (None,)*D],     (D,D)+v.shape[1:]),
+            np.broadcast_to(np.zeros(()), [D,1]+x),
+            np.broadcast_to(v[:,None], [D,1]+x),
+            np.broadcast_to(np.eye(D)[m],  [D,D]+x),
             ), axis=1)
 
