@@ -14,10 +14,6 @@ class Euler(ConservationLaw):
     def   energy(self, q): return q[1]/q[0]
     def velocity(self, q): return q[2:]/q[0]
 
-    def velocity_x(self, q): return self.velocity(q)[0]
-    def velocity_y(self, q): return self.velocity(q)[1]
-    def velocity_z(self, q): return self.velocity(q)[2]
-
     def volume(self, q):
         return 1 / self.density(q)
     def inenergy(self, q):

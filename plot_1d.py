@@ -19,8 +19,17 @@ f = h5py.File(args.file, 'r')
 sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
+def expr(v):
+    try:
+        idx = v.index('_')
+    except ValueError:
+        return getattr(sys, v)
+    v, x = v[:idx], v[idx+1:]
+    x = "xyz".find(x) if x in "xyz" else eval(x)
+    return lambda q: getattr(sys, v)(q)[x]
+
 x = [f[n] for (n,i) in zip("xyz",range(0,D))]
-q = [getattr(sys, v)(f['q'][args.i]) for v in args.variable]
+q = [expr(v)(f['q'][args.i]) for v in args.variable]
 
 plt.plot(*sum(([x[0], q, '.-'] for q in q), []))
 plt.title("%s @ %d:%f" % (args.file, *[f[n][args.i] for n in "it"]))
