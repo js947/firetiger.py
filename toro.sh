@@ -1,11 +1,11 @@
 set -e
 
 parallel 'python toro.py -x 1000 -o toro{}.h5 -c {}' ::: {1..5}
-pypy run.py -on 100 -t 0.3   toro1.h5 &
-pypy run.py -on 100 -t 0.14  toro2.h5 &
-pypy run.py -on 100 -t 0.012 toro3.h5 &
-pypy run.py -on 100 -t 0.05  toro4.h5 &
-pypy run.py -on 100 -t 0.012 toro5.h5 &
+python run.py -on 100 -t 0.3   toro1.h5 &
+python run.py -on 100 -t 0.14  toro2.h5 &
+python run.py -on 100 -t 0.012 toro3.h5 &
+python run.py -on 100 -t 0.05  toro4.h5 &
+python run.py -on 100 -t 0.012 toro5.h5 &
 wait
 
 parallel --bar '
