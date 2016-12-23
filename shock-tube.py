@@ -21,26 +21,15 @@ def coord(x0, x1, nx):
 
 x, dx = coord(0.0, 1.0, args.x)
 
-qL = { 1: sys.cons(1.0, 1.0, 0.75)
-     , 2: sys.cons(1.0, 0.4, -2.0)
-     , 3: sys.cons(1.0, 1000.0, 0.0)
-     , 4: sys.cons(5.99924, 460.894, 19.5975)
-     , 5: sys.cons(1.0,1000.0,-19.59745)
-     }
-qR = { 1: sys.cons(0.125, 0.1, 0.0)
-     , 2: sys.cons(1.0,0.4,2.0)
-     , 3: sys.cons(1.0,0.01,0.0)
-     , 4: sys.cons(5.99242, 46.095, -6.19633)
-     , 5: sys.cons(1.0,0.01,-19.59745)
-     }
-m =  { 1: 0.3
-     , 2: 0.5
-     , 3: 0.5
-     , 4: 0.3
-     , 5: 0.8
-     }
+m, qL, qR = {
+    1: (0.3, sys.cons(1.0, 1.0, 0.75), sys.cons(0.125, 0.1, 0.0)),
+    2: (0.5, sys.cons(1.0, 0.4, -2.0), sys.cons(1.0,0.4,2.0)),
+    3: (0.5, sys.cons(1.0, 1000.0, 0.0), sys.cons(1.0,0.01,0.0)),
+    4: (0.3, sys.cons(5.99924, 460.894, 19.5975), sys.cons(5.99242, 46.095, -6.19633)),
+    5: (0.8, sys.cons(1.0,1000.0,-19.59745), sys.cons(1.0,0.01,-19.59745)),
+}[args.c]
 
-q = np.where(x < m[args.c], qL[args.c][:,None], qR[args.c][:,None])
+q = np.where(x < m, qL[:,None], qR[:,None])
 
 f = h5py.File(args.o, 'w')
 f.attrs['system'] = np.string_(pickle.dumps(sys))
