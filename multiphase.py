@@ -40,6 +40,8 @@ class Multiphase(ModifiedConservationLaw):
 
     def mdensity(self, q):
         return np.sum(self.alpha(q)*self.density(q), axis=0)
+    def mpressure(self, q):
+        return np.sum(self.lamda(q)*self.pressure(q), axis=0)/np.sum(self.lamda(q), axis=0)
 
     def uI(self, ql, qr): return (self.mvelocity(ql) + self.mvelocity(qr))/2
     def pI(self, ql, qr): return (self.mpressure(ql) + self.mpressure(qr))/2
