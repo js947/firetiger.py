@@ -4,8 +4,9 @@ import argparse
 import numpy as np
 import h5py
 
-from eos import IdealGas
+from eos import IdealGas, StiffenedGas
 from euler import Euler
+from multiphase import Multiphase
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("file", help="simulation file", type=str)
