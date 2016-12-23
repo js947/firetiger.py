@@ -36,13 +36,33 @@ class Multiphase(ModifiedConservationLaw):
     def mdensity(self, q):
         return np.sum(self.alpha(q)*self.density(q), axis=0)
 
-    def uI(self, q): return (self.mvelocity(ql) + self.mvelocity(qr))/2
-    def pI(self, q): return (self.mpressure(ql) + self.mpressure(qr))/2
+    def uI(self, ql, qr): return (self.mvelocity(ql) + self.mvelocity(qr))/2
+    def pI(self, ql, qr): return (self.mpressure(ql) + self.mpressure(qr))/2
     def smax(self, q):
         return np.max(abs(self.velocity(q)) + self.soundspd(q), axis=1)
     def F(self, q, pI, uI):
+        a = self.alpha(q)
         v = self.velocity(q)
-        D = v.shape[0]
+        p = self.pressure(q)
+        D, *x = v.shape
 
-        return v[:,None]*q + self.alpha(q)*self.pressure(q)
+        d0 = np.broadcast_to(np.zeros(1), (D,)+v.shape)
+        d1 = np.concatenate((
+            np.broadcast_to(np.zeros(1),                                 (D,) +v.shape),
+            np.broadcast_to(np.zeros(D)[(slice(None),None) + (None,)*D], (D,2)+v.shape[1:]),
+            np.broadcast_to(v[:,None],                                   (D,1)+v.shape[1:]),
+            np.broadcast_to(np.eye(D)[(slice(None),)*2 + (None,)*D],     (D,D)+v.shape[1:]),
+            ), axis=1)
+        d2 = np.concatenate((
+            np.broadcast_to(np.zeros(1),                                 (D,) +v.shape),
+            np.broadcast_to(np.zeros(D)[(slice(None),None) + (None,)*D], (D,2)+v.shape[1:]),
+            np.broadcast_to(vI[:,None],                                  (D,1)+v.shape[1:]),
+            np.broadcast_to(np.eye(D)[(slice(None),)*2 + (None,)*D],     (D,D)+v.shape[1:]),
+            ), axis=1)
+        d3 = self.alpha(q)*np.concatenate((
+            np.broadcast_to(vI[:,None],  (D,))
+            np.broadcast_to(np.zeros(1), ())
+            ), axis=1)
+
+        return v[:,None]*q*d0 + a*p*d1 - a*pI*d2 + a*d3
 
