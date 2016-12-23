@@ -7,10 +7,15 @@ class Multiphase(ModifiedConservationLaw):
         self.eos = eos
 
     def cons(self, alpha, rho, p, *us):
+        alpha = np.asarray(alpha)
+        rho = np.asarray(rho)
+        p = np.asarray(p)
+        us = [np.asarray(u) for u in us]
+
         E = np.stack(
             eos.energy(1/rho[i], p[i]) + sum(u[i]**2 for u in us)/2
             for i, eos in enumerate(self.eos))
-        np.stack([alpha, alpha*rho, alpha*rho*E] + [alpha*rho*u for u in us])
+        return np.stack([alpha, alpha*rho, alpha*rho*E] + [alpha*rho*u for u in us])
 
     def    alpha(self, q): return q[0]
     def  density(self, q): return q[1]/q[0]
