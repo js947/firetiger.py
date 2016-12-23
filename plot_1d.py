@@ -20,8 +20,9 @@ sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
 x = [f[n] for (n,i) in zip("xyz",range(0,D))]
+q = [getattr(sys, v)(f['q'][args.i]) for v in args.variable]
 
-plt.plot(*sum(([x[0], getattr(sys,v)(f['q'][args.i]), '.-'] for v in args.variable), []))
+plt.plot(*sum(([x[0], q, '.-'] for q in q), []))
 plt.title("%s @ %d:%f" % (args.file, *[f[n][args.i] for n in "it"]))
 plt.ylabel("%s" % args.variable)
 
