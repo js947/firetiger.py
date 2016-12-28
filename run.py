@@ -26,7 +26,7 @@ f = h5py.File(args.file, 'r+')
 sys = np.loads(f.attrs['system'])
 
 h, q_all, i_all, t_all = (f[n] for n in "hqit")
-q, i, t = (x[args.i] for x in (q_all, i_all, t_all))
+q, i, t = (x[args.i].astype('f8') for x in (q_all, i_all, t_all))
 
 def advance(q, i, t, dt):
     print("%5i %12f %12f" % (i, t, dt))
