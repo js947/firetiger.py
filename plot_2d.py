@@ -20,7 +20,16 @@ sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
 x = [f[n] for (n,i) in zip("xyz",range(0,D))]
-q = getattr(sys, args.variable)(f['q'][args.i])
+def expr(v):
+    try:
+        idx = v.index('_')
+    except ValueError:
+        return getattr(sys, v)
+    v, x = v[:idx], v[idx+1:]
+    x = "xyz".find(x) if x in "xyz" else eval(x)
+    return lambda q: getattr(sys, v)(q)[x]
+
+q = expr(args.variable)(f['q'][args.i])
 
 plt.axis('equal')
 plt.contourf(x[0], x[1], q, 15)
