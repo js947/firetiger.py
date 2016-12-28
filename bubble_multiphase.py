@@ -24,9 +24,10 @@ y, dy = coord(-0.9, 0.9, args.y)
 x, y = np.meshgrid(x, y)
 
 eps = 1e-6
-bubble = sys.cons((eps, 1-eps), (1.4, 0.25463), (1e5, 1e5), (0.0, 0.0), (0.0, 0.0))
-shock  = sys.cons((1-eps, eps), (1.92691, 0.25463), (1.5698e5, 1e5), (-0.33361*343.0, 0.0), (0.0, 0.0))
-amb    = sys.cons((1-eps, eps), (1.4, 0.25463), (1e5, 1e5), (0.0, 0.0), (0.0, 0.0))
+p_amb, p_shk = 1e5, 1.5698e5
+bubble = sys.cons((eps, 1-eps), (1.4,     0.25463), (p_amb, p_amb), (0.0, 0.0), (0.0, 0.0))
+shock  = sys.cons((1-eps, eps), (1.92691, 0.25463), (p_shk, p_amb), (-0.33361*343.0, 0.0), (0.0, 0.0))
+amb    = sys.cons((1-eps, eps), (1.4,     0.25463), (p_amb, p_amb), (0.0, 0.0), (0.0, 0.0))
 
 is_shock  = x < 0.05
 is_bubble = np.sqrt((x-1)**2 + y**2) < 0.35
