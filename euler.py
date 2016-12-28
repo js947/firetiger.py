@@ -26,14 +26,14 @@ class Euler(ConservationLaw):
 
     def smax(self, q):
         return abs(self.velocity(q)) + self.soundspd(q)
-    def F(self, q):
+    def F(self, q, d):
         v = self.velocity(q)
         D, *x = v.shape
-        m = (slice(None),)*2 + (None,)*D
+        m = (slice(None),d) + (None,)*D
 
-        return v[:,None]*q + self.pressure(q)*np.concatenate((
-            np.broadcast_to(np.zeros(()), [D,1]+x),
-            np.broadcast_to(v[:,None], [D,1]+x),
-            np.broadcast_to(np.eye(D)[m],  [D,D]+x),
-            ), axis=1)
+        return v[d,None]*q + self.pressure(q)*np.concatenate((
+            np.broadcast_to(np.zeros(()), [1]+x),
+            np.broadcast_to(v[d,None],    [1]+x),
+            np.broadcast_to(np.eye(D)[m], [D]+x),
+            ), axis=0)
 
