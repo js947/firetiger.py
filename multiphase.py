@@ -9,8 +9,7 @@ class Multiphase(ModifiedConservationLaw):
     def cons(self, alpha, rho, p, *us):
         alpha, rho, p, *us = [np.asarray(x) for x in (alpha, rho, p) + us]
 
-        E = np.stack(
-            eos.energy(1/rho[i], p[i]) + sum(u[i]**2 for u in us)/2
+        E = np.stack( eos.energy(1/rho[i], p[i]) + sum(u[i]**2 for u in us)/2
             for i, eos in enumerate(self.eos))
         return np.stack([alpha, alpha*rho, alpha*rho*E] + [alpha*rho*u for u in us])
 
@@ -27,12 +26,10 @@ class Multiphase(ModifiedConservationLaw):
         return self.energy(q) - np.sum(self.velocity(q)**2, axis=0)/2
 
     def pressure(self, q):
-        v = self.volume(q)
-        e = self.inenergy(q)
+        v, e = self.volume(q), self.inenergy(q)
         return np.stack(eos.pressure(v[i], e[i]) for i, eos in enumerate(self.eos))
     def soundspd(self, q):
-        v = self.volume(q)
-        p = self.pressure(q)
+        v, p = self.volume(q), self.pressure(q)
         return np.stack(eos.soundspd(v[i], p[i]) for i, eos in enumerate(self.eos))
 
     def mdensity(self, q):
@@ -42,8 +39,6 @@ class Multiphase(ModifiedConservationLaw):
 
     def uI(self, ql, qr): return (self.mvelocity(ql) + self.mvelocity(qr))/2
     def pI(self, ql, qr): return (self.mpressure(ql) + self.mpressure(qr))/2
-    def smax(self, q):
-        return np.max(abs(self.velocity(q)) + self.soundspd(q), axis=1)
     def F(self, q, d, pI, uI):
         a = self.alpha(q)
         v = self.velocity(q)
@@ -70,3 +65,6 @@ class Multiphase(ModifiedConservationLaw):
 
         return v[:,None]*q*d0 + a*p*d1 - a*pI*d2 + a*d3
 
+
+    def smax(self, q):
+        return np.max(abs(self.velocity(q)) + self.soundspd(q), axis=1)
