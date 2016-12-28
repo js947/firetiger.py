@@ -15,6 +15,7 @@ parser.add_argument("-t", help="simulation end time", default=1, type=float)
 parser.add_argument("-n", help="number of steps to run", default=None, type=int)
 parser.add_argument("-oi", help="number of steps between outputs", default=None, type=int)
 parser.add_argument("-cfl", help="cfl number", default=0.95, type=float)
+parser.add_argument("-p", help="type to do calculations", default="f8", type=str)
 
 output_ctrl = parser.add_mutually_exclusive_group(required=False)
 output_ctrl.add_argument("-of", help="time between outputs", default=None, type=float)
@@ -26,7 +27,7 @@ f = h5py.File(args.file, 'r+')
 sys = np.loads(f.attrs['system'])
 
 h, q_all, i_all, t_all = (f[n] for n in "hqit")
-q, i, t = (x[args.i].astype('f8') for x in (q_all, i_all, t_all))
+q, i, t = (x[args.i].astype(args.p) for x in (q_all, i_all, t_all))
 
 def advance(q, i, t, dt):
     print("%5i %12f %12f" % (i, t, dt))
