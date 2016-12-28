@@ -19,5 +19,5 @@ class StiffenedGas:
         return (p + self.gamma*self.p0)*v/(self.gamma - 1)
     def pressure(self, v, e):
         return e*(self.gamma - 1.0)/v - self.gamma*self.p0
-    def soundspd(self, v, e):
+    def soundspd(self, v, p):
         return np.sqrt(v*(p + self.p0)*self.gamma)
