@@ -16,33 +16,54 @@ class ConservationLaw:
         lw = self.F((qr + ql - (fr - fl)*lam)/2, i, *fargs)
         return (lf + lw)/2
 
+    flux = force
+
     def update(self, q, h, dt):
         D = len(h)
         Q = np.pad(q, (((0,0),) + ((1,1),)*D), 'edge')
 
-        def flux(i):
-            F = self.F(Q, i)
-            return self.force(D, Q[lidx(i,D)], Q[ridx(i,D)], F[lidx(i,D)], F[ridx(i,D)], h[i], dt, i)
+        def f(i, flux=self.force):
+            lidx = (slice(None),) + tuple((slice(None, -1) if j == i else slice(1,-1)) for j in range(0,D))
+            ridx = (slice(None),) + tuple((slice( 1, None) if j == i else slice(1,-1)) for j in range(0,D))
 
-        return q - dt*sum(np.diff(flux(i), axis=i+1)/h[i] for i in range(0,D))
+            F = self.F(Q, i)
+            print('F', i, F.shape, F[lidx].shape, F[ridx].shape)
+            f = flux(D, Q[lidx], Q[ridx], F[lidx], F[ridx], h[i], dt, i)
+            print('f', i, f.shape)
+            return f
+
+        return q - dt*sum(np.diff(f(i), axis=i+1)/h[i] for i in range(0,D))
 
 
 class ModifiedConservationLaw(ConservationLaw):
-    def update(self, D, h, dt, q):
-        Q = np.pad(q, (((0,0),) + ((1,1),)*D), 'edge')
+    def update(self, q, h, dt):
+        D = len(h)
+        Q = np.pad(q, (((0,0),)*2 + ((1,1),)*D), 'edge')
 
-        def flux(i):
-            uI = self.uI(Q[lidx(i,D)], Q[ridx(i,D)])
-            pI = self.pI(Q[lidx(i,D)], Q[ridx(i,D)])
+        def flux(i, flux=self.force):
+            lidx = (slice(None),)*2 + tuple((slice(None, -1) if j == i else slice(1,-1)) for j in range(0,D))
+            ridx = (slice(None),)*2 + tuple((slice( 1, None) if j == i else slice(1,-1)) for j in range(0,D))
 
-            F = self.F(Q, i, uI, pI)
-            H = self.H(Q, i, uI, pI)
+            ljdx = tuple(slice(None, -1) if j == i else slice(None) for j in range(0,D))
+            rjdx = tuple(slice( 1, None) if j == i else slice(None) for j in range(0,D))
 
-            return self.force(D, Q[lidx(i,D)], Q[ridx(i,D)], F[lidx(i,D)], F[ridx(i,D)], h[i], dt, i, uI, pI) \
-                        + self.H(Q[lidx(i,D)], Q[ridx(i,D)], uI, pI)
+            print(' q', q.shape)
+            print(' Q', Q.shape, Q[lidx].shape)
+            uI = self.uI(Q[lidx], Q[ridx])
+            pI = self.pI(Q[lidx], Q[ridx])
 
-        return q - dt*sum(np.diff(flux(i), axis=i+1)/h[i] for i in range(0,D))
+            #Fl = self.F(Q, i, uI[(slice(None),)+ljdx], pI[ljdx])
+            #Fr = self.F(Q, i, uI[(slice(None),)+rjdx], pI[rjdx])
 
-def lidx(i, D): return (slice(None),) + tuple((slice(None, -1) if j == i else slice(1,-1)) for j in range(0,D))
-def ridx(i, D): return (slice(None),) + tuple((slice( 1, None) if j == i else slice(1,-1)) for j in range(0,D))
+            #print('Fl', Fl.shape)
+            #print('Fr', Fr.shape)
+
+            H = self.H(Q[lidx], i, uI, pI)
+            print(' H', H.shape)
+            return H
+
+            #return flux(D, Q[lidx], Q[ridx], F[lidx], F[ridx], h[i], dt, i, uI, pI) \
+                  #+ self.H(Q[lidx], Q[ridx], uI, pI)
+
+        return q - dt*sum(np.diff(flux(i), axis=i+2)/h[i] for i in range(0,D))
 
