@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 
 parallel 'python shock-tube.py -x 1000 -o shock-tube{}.h5 -c {}' ::: {1..5}
