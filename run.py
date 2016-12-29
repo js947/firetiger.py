@@ -4,7 +4,6 @@ import argparse
 import numpy as np
 import h5py
 from time import time
-from sys import stdout, stderr, exit
 
 from eos import IdealGas, StiffenedGas
 from euler import Euler
@@ -68,8 +67,7 @@ for tn in target_times:
             if args.oi and i%args.oi:
                 output(q, i, t)
         except FloatingPointError:
-            print('caught floating point exception', file=stderr)
             output(q, i, t)
-            exit(1)
+            raise
     else:
         output(q, i, t)
