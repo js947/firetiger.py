@@ -29,8 +29,6 @@ sys = np.loads(f.attrs['system'])
 
 h, q_all, i_all, t_all = (f[n] for n in "hqit")
 q, i, t = (x[args.i].astype(args.p) for x in (q_all, i_all, t_all))
-if not args.p.isnative:
-    print("warning: using non native data type")
 
 np.seterr(**{t:'raise' for t in ('divide', 'over', 'invalid')})
 
