@@ -50,4 +50,3 @@ class ModifiedConservationLaw(ConservationLaw):
             return flux(D, Q[lidx], Q[ridx], Fl, Fr, h[i], dt, i, uI, pI) + self.H(Q[lidx], i, uI, pI)
 
         return q - dt*sum(np.diff(flux(i), axis=i+2)/h[i] for i in range(0,D))
-
