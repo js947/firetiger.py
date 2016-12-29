@@ -7,7 +7,8 @@ class Euler(ConservationLaw):
         self.eos = eos
 
     def cons(self, rho, p, *us):
-        E = self.eos.energy(1/rho, p) + sum(u**2 for u in us)/2
+        rho, v, p, *us = [np.asarray(x) for x in (rho, 1/rho, p) + us]
+        E = self.eos.energy(v, p) + sum(u**2 for u in us)/2
         return np.stack([rho, rho*E] + [rho*u for u in us])
 
     def  density(self, q): return q[0]
