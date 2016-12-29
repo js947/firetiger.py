@@ -1,10 +1,6 @@
 import numpy as np
 
 class System:
-    def cfl(self, q, h, cfl=0.95):
-        D = len(h)
-        return cfl*np.min(h/np.max(self.smax(q), axis=tuple(range(-D,0))))/D
-
     def expr(self, v):
         try:
             idx = v.index('_')
