@@ -27,12 +27,9 @@ class ConservationLaw:
             ridx = (slice(None),) + tuple((slice( 1, None) if j == i else slice(1,-1)) for j in range(0,D))
 
             F = self.F(Q, i)
-            print('F', i, F.shape, F[lidx].shape, F[ridx].shape)
-            f = flux(D, Q[lidx], Q[ridx], F[lidx], F[ridx], h[i], dt, i)
-            print('f', i, f.shape)
-            return f
+            return flux(D, Q[lidx], Q[ridx], F[lidx], F[ridx], h[i], dt, i)
 
-        return q - dt*sum(np.diff(f(i), axis=i+1)/h[i] for i in range(0,D))
+        return q - dt*sum(np.diff(f(i), axis=i+1)/h[i] for i in range(0,D)) + dt*self.S(q)
 
 
 class ModifiedConservationLaw(ConservationLaw):

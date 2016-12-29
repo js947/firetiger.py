@@ -32,6 +32,10 @@ class Euler(ConservationLaw):
             np.broadcast_to(np.eye(D)[m], [D]+x),
             ))
 
+    def S(self, q):
+        return np.zeros_like(q)
+
+
     def smax(self, q):
         return abs(self.velocity(q)) + self.soundspd(q)
 
