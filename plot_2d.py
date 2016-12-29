@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 
 from eos import IdealGas
 from euler import Euler
-from plot_1d import expr
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("file", help="file to read", type=str)
