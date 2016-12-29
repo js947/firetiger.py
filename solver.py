@@ -1,10 +1,8 @@
 import numpy as np
 
-class ConservationLaw:
-    def cfl(self, q, h, cfl=0.95):
-        D = len(h)
-        return cfl*np.min(h/np.max(self.smax(q), axis=tuple(range(-D,0))))/D
+from system import System
 
+class ConservationLaw(System):
     def llf(self, D, ql, qr, fl, fr, dx, dt, i, *fargs):
         lam = D*dt/dx
         return (fr + fl - (qr - ql)/lam)/2
