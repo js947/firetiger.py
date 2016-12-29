@@ -3,8 +3,7 @@ import numpy as np
 class ConservationLaw:
     def cfl(self, q, h, cfl=0.95):
         D = len(h)
-        space_dims = tuple(range(-D,0))
-        return cfl*np.min(h/np.max(self.smax(q), axis=space_dims))/D
+        return cfl*np.min(h/np.max(self.smax(q), axis=tuple(range(-D,0))))/D
 
     def llf(self, D, ql, qr, fl, fr, dx, dt, i, *fargs):
         lam = D*dt/dx
