@@ -43,23 +43,13 @@ class ModifiedConservationLaw(ConservationLaw):
             ljdx = tuple(slice(None, -1) if j == i else slice(None) for j in range(0,D))
             rjdx = tuple(slice( 1, None) if j == i else slice(None) for j in range(0,D))
 
-            print(' q', q.shape)
-            print(' Q', Q.shape, Q[lidx].shape)
             uI = self.uI(Q[lidx], Q[ridx])
             pI = self.pI(Q[lidx], Q[ridx])
 
-            #Fl = self.F(Q, i, uI[(slice(None),)+ljdx], pI[ljdx])
-            #Fr = self.F(Q, i, uI[(slice(None),)+rjdx], pI[rjdx])
+            Fl = self.F(Q[lidx], i, uI[i], pI)
+            Fr = self.F(Q[ridx], i, uI[i], pI)
 
-            #print('Fl', Fl.shape)
-            #print('Fr', Fr.shape)
-
-            H = self.H(Q[lidx], i, uI, pI)
-            print(' H', H.shape)
-            return H
-
-            #return flux(D, Q[lidx], Q[ridx], F[lidx], F[ridx], h[i], dt, i, uI, pI) \
-                  #+ self.H(Q[lidx], Q[ridx], uI, pI)
+            return flux(D, Q[lidx], Q[ridx], Fl, Fr, h[i], dt, i, uI, pI) + self.H(Q[lidx], i, uI, pI)
 
         return q - dt*sum(np.diff(flux(i), axis=i+2)/h[i] for i in range(0,D))
 

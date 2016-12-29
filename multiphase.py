@@ -46,27 +46,26 @@ class Multiphase(ModifiedConservationLaw):
         a = self.alpha(q)
         v = self.velocity(q)
         p = self.pressure(q)
-        D, *x = v.shape
+        D, M, *x = v.shape
+        m = (slice(None),d) + (None,)*(D+1)
+        m0 = (slice(None),)*2 + (None,)*D
 
-        d0 = np.broadcast_to(np.zeros(1), (D,)+v.shape)
+        d0 = np.broadcast_to(np.concatenate((np.zeros(1), np.ones(2+D)))[:,None], [3+D,M])
         d1 = np.concatenate((
-            np.broadcast_to(np.zeros(1),                                 (D,) +v.shape),
-            np.broadcast_to(np.zeros(D)[(slice(None),None) + (None,)*D], (D,2)+v.shape[1:]),
-            np.broadcast_to(v[:,None],                                   (D,1)+v.shape[1:]),
-            np.broadcast_to(np.eye(D)[(slice(None),)*2 + (None,)*D],     (D,D)+v.shape[1:]),
-            ), axis=1)
+            np.broadcast_to(np.zeros(()), [2,M]+x),
+            np.broadcast_to(v[d,None],    [1,M]+x),
+            np.broadcast_to(np.eye(D)[m], [D,M]+x),
+            ))
         d2 = np.concatenate((
-            np.broadcast_to(np.zeros(1),                                 (D,) +v.shape),
-            np.broadcast_to(np.zeros(D)[(slice(None),None) + (None,)*D], (D,2)+v.shape[1:]),
-            np.broadcast_to(uI[None],                                  (D,1)+v.shape[1:]),
-            np.broadcast_to(np.eye(D)[(slice(None),)*2 + (None,)*D],     (D,D)+v.shape[1:]),
-            ), axis=1)
-        # d3 = self.alpha(q)*np.concatenate((
-        #     np.broadcast_to(vI[:,None],  (D,))
-        #     np.broadcast_to(np.zeros(1), ())
-        #     ), axis=1)
-
-        return v[:,None]*q*d0 + a*p*d1 - a*pI*d2 + a*d3
+            np.broadcast_to(np.zeros(()), [2,M]+x),
+            np.broadcast_to(uI[d,None],   [1,M]+x),
+            np.broadcast_to(np.eye(D)[m], [D,M]+x),
+            ))
+        d3 = self.alpha(q)*np.concatenate((
+            np.broadcast_to(uI[d,None],   [1,M]+x),
+            np.broadcast_to(np.zeros(()), [2+D,M]+x),
+            ))
+        return v[d,:]*q*d0[m0] + a*p*d1 - a*pI*d2 + a*d3
 
     def H(self, q, d, uI, pI):
         a = self.alpha(q)
