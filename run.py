@@ -10,13 +10,13 @@ from euler import Euler
 from multiphase import Multiphase
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("file", help="simulation file", type=str)
-parser.add_argument("-i", help="simulation start", default=-1, type=int)
-parser.add_argument("-t", help="simulation end time", default=1, type=float)
-parser.add_argument("-n", help="number of steps to run", default=None, type=int)
-parser.add_argument("-oi", help="number of steps between outputs", default=None, type=int)
-parser.add_argument("-cfl", help="cfl number", default=0.95, type=float)
-parser.add_argument("-p", help="type to do calculations", default="f8", type=str)
+parser.add_argument("file", type=str,   help="simulation file")
+parser.add_argument("-i",   type=int,   help="simulation start", default=-1)
+parser.add_argument("-t",   type=float, help="simulation end time", default=1)
+parser.add_argument("-n",   type=int,   help="number of steps to run", default=None)
+parser.add_argument("-oi",  type=int,   help="number of steps between outputs", default=None)
+parser.add_argument("-cfl", type=float, help="cfl number", default=0.95)
+parser.add_argument("-p",   type=np.dtype, help="type to do calculations", default=np.dtype('f8'))
 
 output_ctrl = parser.add_mutually_exclusive_group(required=False)
 output_ctrl.add_argument("-of", help="time between outputs", default=None, type=float)
