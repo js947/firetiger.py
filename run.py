@@ -70,3 +70,5 @@ for tn in target_times:
             print('caught floating point exception', file=stderr)
             output(q, i, t)
             exit(1)
+    else:
+        output(q, i, t)
