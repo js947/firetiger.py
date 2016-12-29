@@ -18,26 +18,16 @@ class Multiphase(ModifiedConservationLaw):
     def   energy(self, q): return q[2]/q[1]
     def velocity(self, q): return q[3:]/q[1]
 
-    def volume(self, q):
-        return 1 / self.density(q)
-    def lamda(self, q):
-        return self.alpha(q)*self.density(q)/self.mdensity(q)
-    def inenergy(self, q):
-        return self.energy(q) - np.sum(self.velocity(q)**2, axis=0)/2
+    def   volume(self, q): return 1 / self.density(q)
+    def    lamda(self, q): return self.alpha(q)*self.density(q)/self.mdensity(q)
+    def inenergy(self, q): return self.energy(q) - np.sum(self.velocity(q)**2, axis=0)/2
 
-    def pressure(self, q):
-        v, e = self.volume(q), self.inenergy(q)
-        return np.stack(eos.pressure(v[i], e[i]) for i, eos in enumerate(self.eos))
-    def soundspd(self, q):
-        v, p = self.volume(q), self.pressure(q)
-        return np.stack(eos.soundspd(v[i], p[i]) for i, eos in enumerate(self.eos))
+    def pressure(self, q): return np.stack(eos.pressure(self.volume(q)[i], self.inenergy(q)[i]) for i, eos in enumerate(self.eos))
+    def soundspd(self, q): return np.stack(eos.soundspd(self.volume(q)[i], self.pressure(q)[i]) for i, eos in enumerate(self.eos))
 
-    def mdensity(self, q):
-        return np.sum(self.alpha(q)*self.density(q), axis=0)
-    def mvelocity(self, q):
-        return np.sum(self.lamda(q)*self.velocity(q), axis=0)/np.sum(self.lamda(q), axis=0)
-    def mpressure(self, q):
-        return np.sum(self.lamda(q)*self.pressure(q), axis=0)/np.sum(self.lamda(q), axis=0)
+    def mdensity(self, q):  return np.sum(self.alpha(q)*self.density(q), axis=0)
+    def mvelocity(self, q): return np.sum(self.lamda(q)*self.velocity(q), axis=0)/np.sum(self.lamda(q), axis=0)
+    def mpressure(self, q): return np.sum(self.lamda(q)*self.pressure(q), axis=0)/np.sum(self.lamda(q), axis=0)
 
     def uI(self, ql, qr): return (self.mvelocity(ql) + self.mvelocity(qr))/2
     def pI(self, ql, qr): return (self.mpressure(ql) + self.mpressure(qr))/2
