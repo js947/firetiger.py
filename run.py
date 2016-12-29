@@ -3,6 +3,7 @@ import pickle
 import argparse
 import numpy as np
 import h5py
+from time import time
 
 from eos import IdealGas, StiffenedGas
 from euler import Euler
@@ -28,10 +29,16 @@ sys = np.loads(f.attrs['system'])
 
 h, q_all, i_all, t_all = (f[n] for n in "hqit")
 q, i, t = (x[args.i].astype(args.p) for x in (q_all, i_all, t_all))
+if not args.p.isnative:
+    print("warning: using non native data type")
 
 def advance(q, i, t, dt):
-    print("%5i %12f %12f" % (i, t, dt))
-    return sys.update(q, h, dt), i+1, t+dt
+    print("%5i %12f %12f" % (i, t, dt), end='')
+    a = time()
+    ans = sys.update(q, h, dt), i+1, t+dt
+    b = time()
+    print(" %12f" % (b-a))
+    return ans
 
 def output(q, i, t):
     print("%5i %12f output" % (i, t))
