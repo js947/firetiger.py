@@ -19,7 +19,7 @@ sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
 x = [f[n] for (n,i) in zip("xyz",range(0,D))]
-q = np.stack(getattr(sys, args.variable)(q) for q in f['q'])
+q = np.stack(sys.expr(args.variable)(q) for q in f['q'])
 
 plt.contourf(x[0], f['t'], q, 15)
 

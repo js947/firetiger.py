@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 from eos import IdealGas
 from euler import Euler
+from plot_1d import expr
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("file", help="file to read", type=str)
@@ -20,16 +21,7 @@ sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
 x = [f[n] for (n,i) in zip("xyz",range(0,D))]
-def expr(v):
-    try:
-        idx = v.index('_')
-    except ValueError:
-        return getattr(sys, v)
-    v, x = v[:idx], v[idx+1:]
-    x = "xyz".find(x) if x in "xyz" else eval(x)
-    return lambda q: getattr(sys, v)(q)[x]
-
-q = expr(args.variable)(f['q'][args.i])
+q = sys.expr(args.variable)(f['q'][args.i])
 
 plt.axis('equal')
 plt.contourf(x[0], x[1], q, 15)
