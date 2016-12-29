@@ -4,6 +4,7 @@ import argparse
 import numpy as np
 import h5py
 from time import time
+from sys import stdout, stderr, exit
 
 from eos import IdealGas, StiffenedGas
 from euler import Euler
