@@ -1,6 +1,8 @@
 __pycache__/
+build
 *.pyc
 *.so
+*.c
 
 *.h5
 *.png
