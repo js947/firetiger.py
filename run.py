@@ -55,13 +55,18 @@ else:
 
 for tn in target_times:
     while not args.n or i < args.n:
-        dt = sys.cfl(q, h, cfl=args.cfl)
+        try:
+            dt = sys.cfl(q, h, cfl=args.cfl)
 
-        if t + dt > tn:
-            output(*advance(q, i, t, tn - t))
-            break
+            if t + dt > tn:
+                output(*advance(q, i, t, tn - t))
+                break
 
-        q, i, t = advance(q, i, t, dt)
+            q, i, t = advance(q, i, t, dt)
 
-        if args.oi and i%args.oi:
+            if args.oi and i%args.oi:
+                output(q, i, t)
+        except FloatingPointError:
+            print('caught floating point exception', file=stderr)
             output(q, i, t)
+            exit(1)
