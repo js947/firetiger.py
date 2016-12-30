@@ -26,6 +26,7 @@ plt.axis('equal')
 plt.contourf(x[0], x[1], q, 15)
 plt.colorbar()
 plt.title("%s %s @ %d:%f" % (args.file, args.variable, f['i'][args.i], f['t'][args.i]))
+plt.tight_layout()
 
 if args.o:
     plt.savefig(args.o)
