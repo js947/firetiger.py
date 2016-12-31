@@ -23,7 +23,7 @@ def coord(x0, x1, nx):
     return x[:-1], dx
 
 def vd(v):
-    return [v if i == args.d else 0.0 for i in range(0,args.D)]
+    return [v if i == {'x':0, 'y':1, 'z':2}[args.d] else 0.0 for i in range(0,args.D)]
 
 m, qL, qR = {
     0: (0.3, sys.cons(    1.0,     1.0, *vd(     0.0)), sys.cons(  0.125,    0.1, *vd(      0.0))),
