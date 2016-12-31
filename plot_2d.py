@@ -15,7 +15,7 @@ parser.add_argument("-i", help="step number to plot", default=-1, type=int)
 parser.add_argument("-o", help="output file")
 args = parser.parse_args()
 
-f = h5py.File(args.file, 'r')
+f = h5py.File(args.file, 'r', libver='latest', swmr=True)
 sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 

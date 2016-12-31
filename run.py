@@ -24,7 +24,7 @@ output_ctrl.add_argument("-on", help="number of (equally spaced) output steps", 
 
 args = parser.parse_args()
 
-f = h5py.File(args.file, 'r+')
+f = h5py.File(args.file, 'r+', libver='latest', swmr=True)
 sys = np.loads(f.attrs['system'])
 
 h, q_all, i_all, t_all = (f[n] for n in "hqit")
@@ -45,6 +45,8 @@ def output(q, i, t):
     for dat in (i_all, t_all, q_all):
         dat.resize(dat.shape[0]+1, axis=0)
     i_all[-1], t_all[-1], q_all[-1] = i, t, q
+    for dat in (i_all, t_all, q_all):
+        dat.flush()
 
 if args.on:
     target_times = np.linspace(t, args.t, args.on)[1:]
