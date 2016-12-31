@@ -24,7 +24,7 @@ y, dy = coord(-0.9, 0.9, args.y)
 x = np.meshgrid(x, y)
 
 bubble = sys.cons(0.1, 1.0, 0.0, 0.0)
-shock  = sys.cons(3.81062, 9.98625, 2.5745, 0.0)
+shock  = sys.cons(3.81062, 9.98625, 0.0, 2.5745)
 amb    = sys.cons(1.0, 1.0, 0.0, 0.0)
 
 m = (slice(None),) + (None,)*2
