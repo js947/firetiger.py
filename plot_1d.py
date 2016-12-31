@@ -19,7 +19,7 @@ f = h5py.File(args.file, 'r')
 sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
-x = [f[n] for (n,i) in zip("xyz",range(0,D))]
+x = f['x']
 q = [sys.expr(v)(f['q'][args.i]) for v in args.variable]
 
 plt.plot(*sum(([x[0], q, '.-'] for q in q), []))

@@ -44,12 +44,11 @@ f = h5py.File(args.o, 'w')
 f.attrs['system'] = np.string_(pickle.dumps(sys))
 
 h_ = f.create_dataset('h', data=[j[1] for j in xdx])
-for n, d in zip('xyz', x):
-    f.create_dataset(n, data=d)
+x_ = f.create_dataset('x', data=x)
 
 i_ = f.create_dataset('i', (1,), maxshape=(None,), dtype='i')
-t_ = f.create_dataset('t', (1,), maxshape=(None,), dtype='f')
-q_ = f.create_dataset('q', (1,)+q.shape, maxshape=(None,)+q.shape, dtype='f', compression="lzf")
+t_ = f.create_dataset('t', (1,), maxshape=(None,), dtype='f4')
+q_ = f.create_dataset('q', (1,)+q.shape, maxshape=(None,)+q.shape, dtype='f4', compression="lzf")
 
 i_[0] = 0
 t_[0] = 0.0

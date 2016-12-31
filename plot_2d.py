@@ -19,7 +19,7 @@ f = h5py.File(args.file, 'r', libver='latest', swmr=True)
 sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
-x = [f[n] for (n,i) in zip("xyz",range(0,D))]
+x = f['x']
 q = sys.expr(args.variable)(f['q'][args.i])
 
 plt.axis('equal')
