@@ -42,37 +42,3 @@ class Euler(ConservationLaw):
     def reflect(self, q, d):
         return self.cons(self.density(q), self.pressure(q),
                 *[(-v if i == d else v) for (i,v) in enumerate(self.velocity(q))])
-
-class ReactiveEuler(Euler):
-    def __init__(self, eos, rr):
-        super().__init__(eos)
-        self.rr = rr
-
-    def cons(self, rho, p, l, *us):
-        rho, v, p, l, *us = [np.asarray(x) for x in (rho, 1/rho, l, p) + us]
-        E = self.eos.energy(v, p) + sum(u**2 for u in us)/2
-        return np.stack([rho, rho*E, rho*l] + [rho*u for u in us])
-
-    def F(self, q, d):
-        v = self.velocity(q)
-        D, *x = v.shape
-        m = (d,slice(None)) + (None,)*D
-
-        return v[d,None]*q + self.pressure(q)*np.concatenate((
-            np.broadcast_to(np.zeros(()), [1]+x),
-            np.broadcast_to(v[d,None],    [1]+x),
-            np.broadcast_to(np.zeros(()), [1]+x),
-            np.broadcast_to(np.eye(D)[m], [D]+x),
-            ))
-    def S(self, q):
-        t = self.temperature(q)
-        D = len(t.shape)
-        k = self.rr(self, q)
-        return np.concatenate((
-            np.broadcast_to(np.zeros(()), [2]+x), K,
-            np.broadcast_to(np.zeros(()), [D]+x),
-            ))
-
-    def reflect(self, q, d):
-        return self.cons(self.density(q), self.pressure(q), self.lamda(q),
-                *[(-v if i == d else v) for (i,v) in enumerate(self.velocity(q))])
