@@ -22,6 +22,8 @@ class ConservationLaw(System):
     def update(self, q, h, dt):
         D = len(h)
         Q = np.pad(q, (((0,0),) + ((1,1),)*D), 'edge')
+        Q[:, 0] = getattr(self, 'x0', self.transmit)(q[:, 0])
+        Q[:,-1] = getattr(self, 'x1', self.transmit)(q[:,-1])
 
         def f(i, flux=self.force):
             lidx = (slice(None),) + tuple((slice(None, -1) if j == i else slice(1,-1)) for j in range(0,D))
