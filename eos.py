@@ -11,7 +11,7 @@ class IdealGas:
     def soundspd(self, v, p):
         return np.sqrt(v*p*self.gamma)
     def temperature(self, v, e):
-        return (e - self.q)/cv
+        return (e - self.q)/self.cv
 
 class StiffenedGas:
     def __init__(self, gamma, p0, cv=1, q=0):
@@ -24,7 +24,7 @@ class StiffenedGas:
     def soundspd(self, v, p):
         return np.sqrt(v*(p + self.p0)*self.gamma)
     def temperature(self, v, e):
-        return (e - self.q)/cv
+        return (e - self.q)/self.cv
 
 class Arrhenius:
     def __init__(self, z, e):
