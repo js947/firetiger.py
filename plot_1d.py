@@ -11,6 +11,7 @@ from euler import Euler
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("file", help="file to read", type=str)
 parser.add_argument("variable", help="variable to plot", type=str, nargs='+')
+parser.add_argument("-x", help="x-axis variable", default=None, type=str)
 parser.add_argument("-i", help="step number to plot", default=-1, type=int)
 parser.add_argument("-o", help="output file")
 args = parser.parse_args()
@@ -19,11 +20,11 @@ f = h5py.File(args.file, 'r')
 sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
-x = f['x']
+x = f['x'][0] if args.x is None else sys.expr(args.x)(f['q'][args.i])
 
 plt.title("%s @ %d:%f" % (args.file, *[f[n][args.i] for n in "it"]))
 for q,v in [(sys.expr(v)(f['q'][args.i]),v) for v in args.variable]:
-    plt.plot(x[0], q, '.-', label=v)
+    plt.plot(x, q, '.-', label=v)
 if len(args.variable) == 1:
     plt.ylabel("%s" % args.variable[0])
 else:
