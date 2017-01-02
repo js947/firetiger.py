@@ -21,7 +21,8 @@ D = len(f['h'])
 x = f['x']
 q = np.stack(sys.expr(args.variable)(q) for q in f['q'])
 
-plt.contourf(x[0], f['t'], q, 15)
+plt.pcolormesh(x[0], f['t'], q)
+plt.colorbar()
 
 plt.title("%s %s" % (args.file, args.variable))
 plt.xlabel('x')
