@@ -21,7 +21,7 @@ def coord(x0, x1, nx):
     x += dx/2
     return x[:-1], dx
 
-x, dx = coord(0.0, 0.6, args.x)
+x, dx = coord(0.0, 1.0, args.x)
 q = sys.cons(1.2, 101325.0, 0.0, -775.0)
 
 q = np.broadcast_to(q[:,None], q.shape + x.shape)
