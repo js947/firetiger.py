@@ -30,7 +30,7 @@ class Arrhenius:
     def __init__(self, z, e):
         self.z, self.e = z, e
 
-    def __call__(sys, q):
+    def __call__(self, sys, q):
         l = np.clip(sys.lamda(q), 0, 1)
         T = sys.temperature(q)
         return (1 - l)*self.z*np.exp(-self.e/T)
