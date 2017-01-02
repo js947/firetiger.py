@@ -18,7 +18,7 @@ f = h5py.File(args.file, 'r')
 sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
-x = [f[n] for (n,i) in zip("xyz",range(0,D))]
+x = f['x']
 q = np.stack(sys.expr(args.variable)(q) for q in f['q'])
 
 plt.contourf(x[0], f['t'], q, 15)
