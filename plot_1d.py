@@ -20,11 +20,15 @@ sys = np.loads(f.attrs['system'])
 D = len(f['h'])
 
 x = f['x']
-q = [sys.expr(v)(f['q'][args.i]) for v in args.variable]
 
-plt.plot(*sum(([x[0], q, '.-'] for q in q), []))
 plt.title("%s @ %d:%f" % (args.file, *[f[n][args.i] for n in "it"]))
-plt.ylabel("%s" % args.variable)
+for q,v in [(sys.expr(v)(f['q'][args.i]),v) for v in args.variable]:
+    plt.plot(x[0], q, '.-', label=v)
+if len(args.variable) == 1:
+    plt.ylabel("%s" % args.variable[0])
+else:
+    plt.legend()
+plt.tight_layout()
 
 if args.o:
     plt.savefig(args.o)
