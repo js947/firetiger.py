@@ -12,16 +12,13 @@ rm -f shock-tube*.h5
 
 rm -f shock-tube*.pdf
 ./plot_1d.py shock-tube_1d.h5 density velocity_x -o shock-tube_1d.pdf
-./plot_2d.py shock-tube_2d.h5 velocity_x -o shock-tube_2d_x0.pdf -i 0
-./plot_2d.py shock-tube_2d.h5 velocity_y -o shock-tube_2d_y0.pdf -i 0
-./plot_2d.py shock-tube_2d.h5 velocity_x -o shock-tube_2d_x1.pdf
-./plot_2d.py shock-tube_2d.h5 velocity_y -o shock-tube_2d_y1.pdf
+./plot_2d.py shock-tube_2d.h5 velocity_x -o shock-tube_2d_x.pdf
+./plot_2d.py shock-tube_2d.h5 velocity_y -o shock-tube_2d_y.pdf
 ./plot_1d.py shock-tube_2d_slice.h5 density velocity_x velocity_y -o shock-tube_slice.pdf
 
-pdfjoin shock-tube_{1d,slice,2d_{x,y}{0,1}}.pdf -o shock-tube.pdf
+pdfjoin shock-tube_{1d,slice,2d_{x,y}}.pdf -o shock-tube.pdf
 
 exit 0
-
 
 parallel './shock-tube.py -x 1000 -o shock-tube{}.h5 -c {}' ::: {1..5}
 ./run.py -on 100 -t 0.3   shock-tube1.h5 &
