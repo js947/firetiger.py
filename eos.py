@@ -11,6 +11,9 @@ class IdealGas:
     def soundspd(self, v, p):
         return np.sqrt(v*p*self.gamma)
 
+    def __repr__(self):
+        return "eos.IdealGas(%f)" % self.gamma
+
 class StiffenedGas:
     def __init__(self, gamma, p0):
         self.gamma, self.p0 = gamma, p0
@@ -21,3 +24,6 @@ class StiffenedGas:
         return e*(self.gamma - 1.0)/v - self.gamma*self.p0
     def soundspd(self, v, p):
         return np.sqrt(v*(p + self.p0)*self.gamma)
+
+    def __repr__(self):
+        return "eos.StiffenedGas(%f,%f)" % (self.gamma, self.p0)
