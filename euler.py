@@ -37,6 +37,12 @@ class Euler(ConservationLaw):
     def smax(self, q):
         return abs(self.velocity(q)) + self.soundspd(q)
 
+    def transmit(self, q, d):
+        return q
+    def reflect(self, q, d):
+        return self.cons(self.density(q), self.pressure(q),
+                *[(-v if i == d else v) for (i,v) in enumerate(self.velocity(q))])
+
 class ReactiveEuler(Euler):
     def __init__(self, eos, rr):
         super().__init__(eos)
@@ -66,3 +72,7 @@ class ReactiveEuler(Euler):
             np.broadcast_to(np.zeros(()), [2]+x), K,
             np.broadcast_to(np.zeros(()), [D]+x),
             ))
+
+    def reflect(self, q, d):
+        return self.cons(self.density(q), self.pressure(q), self.lamda(q),
+                *[(-v if i == d else v) for (i,v) in enumerate(self.velocity(q))])
